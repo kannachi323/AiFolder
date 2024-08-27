@@ -1,0 +1,138 @@
+{
+  "id": "/Users/mtccool668/Downloads",
+  "label": "Downloads",
+  "children": [
+    {
+      "id": "/Users/mtccool668/Downloads/hw2_2024.04.03.06.27",
+      "label": "hw2_2024.04.03.06.27",
+      "children": [
+        {
+          "id": "/Users/mtccool668/Downloads/hw2_2024.04.03.06.27/starter",
+          "label": "starter",
+          "children": []
+        },
+        {
+          "id": "/Users/mtccool668/Downloads/hw2_2024.04.03.06.27/assignment.pdf",
+          "label": "assignment.pdf",
+          "fileType": ".pdf",
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "/Users/mtccool668/Downloads/Lecture-02A.pdf",
+      "label": "Lecture-02A.pdf",
+      "fileType": ".pdf",
+      "children": []
+    },
+    {
+      "id": "/Users/mtccool668/Downloads/Redact_July 25, 2022.pdf",
+      "label": "Redact_July 25, 2022.pdf",
+      "fileType": ".pdf",
+      "children": []
+    },
+    {
+      "id": "/Users/mtccool668/Downloads/WA1.pdf",
+      "label": "WA1.pdf",
+      "fileType": ".pdf",
+      "children": []
+    },
+    {
+      "id": "/Users/mtccool668/Downloads/Module 1 Report_HW - Matthew Chen.pdf",
+      "label": "Module 1 Report_HW - Matthew Chen.pdf",
+      "fileType": ".pdf",
+      "children": []
+    },
+    {
+      "id": "/Users/mtccool668/Downloads/CHEATING.pdf",
+      "label": "CHEATING.pdf",
+      "fileType": ".pdf",
+      "children": []
+    },
+    {
+      "id": "/Users/mtccool668/Downloads/math21book.pdf",
+      "label": "math21book.pdf",
+      "fileType": ".pdf",
+      "children": []
+    },
+    {
+      "id": "/Users/mtccool668/Downloads/prog3 2",
+      "label": "prog3 2",
+      "children": [
+        {
+          "id": "/Users/mtccool668/Downloads/prog3 2/Dictionary.c",
+          "label": "Dictionary.c",
+          "fileType": ".c",
+          "children": []
+        },
+        {
+          "id": "/Users/mtccool668/Downloads/prog3 2/List.c",
+          "label": "List.c",
+          "fileType": ".c",
+          "children": []
+        },
+        {
+          "id": "/Users/mtccool668/Downloads/prog3 2/test1.in",
+          "label": "test1.in",
+          "fileType": ".in",
+          "children": []
+        },
+        {
+          "id": "/Users/mtccool668/Downloads/prog3 2/HashTable.h",
+          "label": "HashTable.h",
+          "fileType": ".h",
+          "children": []
+        },
+        {
+          "id": "/Users/mtccool668/Downloads/prog3 2/Makefile",
+          "label": "Makefile",
+          "fileType": "",
+          "children": []
+        },
+        {
+          "id": "/Users/mtccool668/Downloads/prog3 2/prog3.c",
+          "label": "prog3.c",
+          "fileType": ".c",
+          "children": []
+        },
+        {
+          "id": "/Users/mtccool668/Downloads/prog3 2/List.h",
+          "label": "List.h",
+          "fileType": ".h",
+          "children": []
+        },
+        {
+          "id": "/Users/mtccool668/Downloads/prog3 2/Dictionary.h",
+          "label": "Dictionary.h",
+          "fileType": ".h",
+          "children": []
+        },
+        {
+          "id": "/Users/mtccool668/Downloads/prog3 2/test_input_db.in",
+          "label": "test_input_db.in",
+          "fileType": ".in",
+          "children": []
+        },
+        {
+          "id": "/Users/mtccool668/Downloads/prog3 2/HashTable.c",
+          "label": "HashTable.c",
+          "fileType": ".c",
+          "children": []
+        },
+        {
+          "id": "/Users/mtccool668/Downloads/prog3 2/music_database.in",
+          "label": "music_database.in",
+          "fileType": ".in",
+          "children": []
+        },
+        {
+          "id": "/Users/mtccool668/Downloads/prog3 2/test2.in",
+          "label": "test2.in",
+          "fileType": ".in",
+          "children": None
+        }
+      ]
+    }
+  ]
+}
+    
