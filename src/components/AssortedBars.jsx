@@ -1,23 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 
-export default function SearchEngine() {
-  const filters = Object.freeze({
-    NAME: 0,
-    DATE_MODIFIED: 1,
-    TYPE: 2,
-  });
-
-  const [filterStates, setFilterStates] = useState([0, 0, 0]);
-
+export function SearchBar() {
   return (
-    <form className="m-3 mb-0 mx-auto max-w-md">
+    <form className="m-3 mb-0 mx-auto w-full">
       <label
-        for="default-search"
+        htmlFor="default-search"
         className="sr-only mb-2 text-sm font-medium text-gray-900 dark:text-white"
       >
         Search
       </label>
-      <div className="relative">
+      <div className="relative mx-3">
         <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
           <svg
             className="h-4 w-4 text-gray-500 dark:text-gray-400"
@@ -28,9 +20,9 @@ export default function SearchEngine() {
           >
             <path
               stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
               d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
             />
           </svg>
