@@ -1,9 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { callChatGPT } from "../service.js";
+import { isValidDir } from "../service.js";
+
+
 
 export function SearchBar({folders, setFolders}) {
+  const handleSearch = async (folderName, e) => {
+    e.preventDefault();
+    try {
+      const response = await isValidDir(folderName); 
+      if (response.result) {
+        setFolders([...folders, folderName]);
+      } else {
+        console.log('Invalid directory'); // TODO: Implement actual alert
+      }
+    } catch (error) {
+      console.error('Error checking directory:', error);
+    }
+    
+    // Resetting the search input
+    document.getElementById('default-search').value = ''; // Fixing method name case
+    setInputPath('');
+  };
+  
+    
+  //Useful for future queries where i show similar folders
+  const [inputPath, setInputPath] = useState('');
+
   return (
-    <form className="m-3 mb-0 mx-auto w-full">
+    <form className="m-3 mb-0 mx-auto w-full" onSubmit={(e) => handleSearch(document.getElementById('default-search').value, e)}>
       <label
         htmlFor="default-search"
         className="sr-only mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -38,9 +63,10 @@ export function SearchBar({folders, setFolders}) {
             if (e.key === "Enter") {
               e.preventDefault();
               const folderPath = e.target.value;
-              setFolders([...folders, folderPath])
+              handleSearch(folderPath, e);
             }
           }}
+          onChange={(event) => setInputPath(event.target.value)}
           required
         />
         <button

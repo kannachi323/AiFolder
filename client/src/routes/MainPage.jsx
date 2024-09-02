@@ -1,9 +1,10 @@
 import React, { useState, useCallback } from "react";
 import FolderSelector from "../components/FolderSelector.jsx";
 import Tree from "../components/Tree.jsx";
-import { SearchBar } from "../components/AssortedBars.jsx";
+import { SearchBar } from "../components/SearchBar.jsx";
 import { PlaygroundButton } from "../components/Playground.jsx";
 import { buildJsonFileTree } from "../service.js";
+import { setItem } from "../db.js";
 
 export default function MainPage() {
   const [folders, setFolders] = useState(
@@ -43,6 +44,7 @@ export default function MainPage() {
           [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-gray-600 
           [&::-webkit-scrollbar]:w-2">
           <Tree node={fileTreeNodes[0]}/>
+          <button onClick={() => setItem("Hello", "world")}>call database</button>
         </div>
       </div>
     </div>

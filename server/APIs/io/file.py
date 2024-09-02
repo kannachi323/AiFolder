@@ -1,12 +1,22 @@
 import os
-from flask import request, jsonify
+from flask import request, jsonify, make_response
 import json
+
+def isValidDir():
+    start_dir = request.args.get('arg1')  # Assuming you're passing the directory path as a query parameter
+    if not os.path.isdir(start_dir):
+        return jsonify({"result": False, "message": "Invalid directory path"})
+    
+    return jsonify({"result": True, "message": "Valid directory path"})
 
 def buildJsonFileTree(max_depth=5, ignores=[]):
     start_dir = request.args.get('arg1')
+    
+    
+    
     ignore_mp = set(ignores)
 
-    print(start_dir)
+    
     
     def dfs(depth, path):
         try:

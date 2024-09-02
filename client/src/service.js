@@ -100,10 +100,30 @@ export async function buildJsonFileTree(path) {
     try {
         const response = await fetch(url);
         const fileTreeData = await response.json();
-        console.log(fileTreeData)
         return fileTreeData;
     } catch (error) {
         console.error('Error fetching data:', error);
     }
 }
 
+export async function isValidDir(path) {
+    const url = new URL(`http:localhost:5001/api/isValidDir`);
+    
+    const data = {
+        arg1: path
+    };
+
+    const searchParams = new URLSearchParams(data);
+
+    url.search = searchParams.toString();
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        console.log('Response from isValidDir:', data.result);
+        return data;
+    } catch (error) {
+        console.error('Error calling isValidDir:', error);
+        return null;  // or handle the error appropriately
+    }
+}

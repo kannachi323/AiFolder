@@ -4,7 +4,7 @@ import { IoMdCheckbox } from "react-icons/io";
 import { MdCheckBoxOutlineBlank } from "react-icons/md";
 import { RiFolderAddLine } from "react-icons/ri";
 import { buildJsonFileTree, callChatGPT } from "../service.js";
-
+import { getItem, setItem } from "../db.js";
 export default function FolderSelector({ folderProps }) {
 
   const defaultCheckboxProps = {
@@ -31,13 +31,27 @@ function FolderItems({ folderProps }) {
   const { defaultSelected, folders, folderActive, setFolderActive, setFileTreeNodes } = folderProps;
 
   const handleFolderClick = async (folderName) => {
-    setFolderActive(folderName);
-    try {
-      const newNodes = [await buildJsonFileTree(folderName)];
+    
+    let newNodes = await getItem(folderName);
+    console.log(newNodes);
+    if (newNodes) {
+      console.log('hi');
       setFileTreeNodes(newNodes);
-    } catch (error) {
-      console.error('Error building file tree:', error);
+      
     }
+    else {
+      try {
+        newNodes = [await buildJsonFileTree(folderName)];
+        
+        if (newNodes) {
+          setFileTreeNodes(newNodes);
+          setItem(folderName, newNodes);
+        }
+      } catch (error) {
+        console.error('Error building file tree:', error);
+      }
+    }
+    setFolderActive(folderName);
   };
 
   return (
