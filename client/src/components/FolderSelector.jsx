@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from 'react-router-dom';
 import { IoMdCheckbox } from "react-icons/io";
 import { MdCheckBoxOutlineBlank } from "react-icons/md";
-import { RiFolderAddLine } from "react-icons/ri";
 import { buildJsonFileTree, callChatGPT } from "../service.js";
 import { getItem, setItem } from "../db.js";
 export default function FolderSelector({ folderProps }) {
@@ -21,14 +20,13 @@ export default function FolderSelector({ folderProps }) {
       [&::-webkit-scrollbar]:w-2">
       
       <FolderItems folderProps={folderProps} />
-      <DropZone folderProps={folderProps} />
       <DefaultCheckBox {...defaultCheckboxProps} />
     </div>
   );
 }
 
 function FolderItems({ folderProps }) {
-  const { defaultSelected, folders, folderActive, setFolderActive, setFileTreeNodes } = folderProps;
+  const { userFolders, defaultSelected, defaultFolders, folderActive, setFolderActive, setFileTreeNodes } = folderProps;
 
   const handleFolderClick = async (folderName) => {
     
@@ -56,23 +54,37 @@ function FolderItems({ folderProps }) {
 
   return (
     <>
-      {folders.length === 0 ? (
+      {(!defaultSelected && userFolders.length === 0) ? (
         <p className="text-gray-500">No folders available</p>
       ) : (
-        folders.map((folderName, index) =>
-          defaultSelected && (
+        <>
+          {defaultSelected &&
+            defaultFolders.map((folderName, index) => (
+              <button
+                className={`overflow-hidden m-2 mt-0 flex w-[100px] flex-col items-center rounded-md
+                  p-2 ease-in animate-in slide-in-from-top-full hover:bg-slate-500 text-lg focus:outline-none focus:ring-4 focus:ring-gray-600 ${
+                    folderActive === folderName ? "bg-slate-500" : ""
+                  }`}
+                key={`default-${index}`}
+                onClick={() => handleFolderClick(folderName)}              
+              >
+                {folderName.substring(folderName.lastIndexOf("/") + 1)}
+              </button>
+            ))
+          }
+          {userFolders.map((folderName, index) => (
             <button
               className={`overflow-hidden m-2 mt-0 flex w-[100px] flex-col items-center rounded-md
                 p-2 ease-in animate-in slide-in-from-top-full hover:bg-slate-500 text-lg focus:outline-none focus:ring-4 focus:ring-gray-600 ${
                   folderActive === folderName ? "bg-slate-500" : ""
                 }`}
-              key={index}
+              key={`user-${index}`}
               onClick={() => handleFolderClick(folderName)}              
             >
-              {folderName.substring(folderName.lastIndexOf("/")+1)}
+              {folderName.substring(folderName.lastIndexOf("/") + 1)}
             </button>
-          )
-        )
+          ))}
+        </>
       )}
     </>
   );
@@ -97,33 +109,3 @@ function DefaultCheckBox({ defaultSelected, setDefaultSelected }) {
   );
 }
 
-function DropZone({folderProps}) {
-  const {setFolders, setFolderActive, folders} = folderProps;
-
-  return (
-    <button
-      className="
-        overflow-hidden m-2 mt-0 flex flex-row items-center justify-center 
-        w-24 h-24 rounded-md p-4 bg-gray-600 
-        ease-in animate-in slide-in-from-top-full hover:bg-gray-500
-      "
-      onClick={async () => {
-        const dirHandle = await getNewDirectory();
-        setFolders([...folders, dirHandle.name])
-        setFolderActive(dirHandle.name);
-      }}
-    >
-      <RiFolderAddLine className="text-3xl" />
-    </button>
-  );
-}
-
-async function getNewDirectory() {
-  try {
-    const dirHandle = await window.showDirectoryPicker();
-    console.log(dirHandle);
-    return dirHandle;
-  } catch (err) {
-    console.error(err);
-  }
-}

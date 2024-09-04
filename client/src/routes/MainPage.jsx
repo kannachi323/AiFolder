@@ -1,21 +1,26 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import FolderSelector from "../components/FolderSelector.jsx";
 import Tree from "../components/Tree.jsx";
 import { SearchBar } from "../components/SearchBar.jsx";
 import { PlaygroundButton } from "../components/Playground.jsx";
-import { buildJsonFileTree } from "../service.js";
-import { setItem } from "../db.js";
+import { buildJsonFileTree, buildPrompt, callChatGPT } from "../service.js";
+import { getItem, setItem, getUserKeys } from "../db.js";
+import { FaMagic } from "react-icons/fa";
+
 
 export default function MainPage() {
-  const [folders, setFolders] = useState(
+  const [defaultFolders, setDefaultFolders] = useState(
       ["C:/Users/mtcco/Desktop", "C:/Users/mtcco/Downloads", "C:/Users/mtcco/Pictures", "C:/Users/mtcco/Music", "C:/Users/mtcco/Videos"]);
+  const [userFolders, setUserFolders] = useState([]);
   const [folderActive, setFolderActive] = useState('');
   const [defaultSelected, setDefaultSelected] = useState(true);
-  const [fileTreeNodes, setFileTreeNodes] = useState([require('../default.json')]);
+  const [fileTreeNodes, setFileTreeNodes] = useState([]);
 
   const folderProps = {
-    folders,
-    setFolders,
+    userFolders,
+    setUserFolders,
+    defaultFolders,
+    setDefaultFolders,
     folderActive,
     setFolderActive,
     defaultSelected,
@@ -23,16 +28,24 @@ export default function MainPage() {
     setFileTreeNodes,
   };
 
-  function createDatabase() {
-    const request = window.indexedDB.open('Folders', 1);
-    request.onsuccess = (e) => {
-      db = request.result
-    }
-  }
+  useEffect(() => {
+    const fetchUserKeys = async () => {
+      try {
+        const userKeys = await getUserKeys(defaultFolders);
+        console.log("User keys:", userKeys);
+        const newUserFolders = Array.from(new Set([...userFolders, ...userKeys]));
+        setUserFolders(newUserFolders);
+      } catch (error) {
+        console.error("Failed to fetch user keys:", error);
+      }
+    };
+  
+    fetchUserKeys(); // Call the async function
+  }, []);
   
   return (
     <div className="h-screen mb-0 overflow-hidden">
-      <SearchBar folders={folders} setFolders={setFolders}/>
+      <SearchBar userFolders={userFolders} setUserFolders={setUserFolders}/>
       <div className="flex flex-row justify-center mt-2 h-[80%] w-screen overflow-x-hidden">
         <FolderSelector folderProps={folderProps} />
         
@@ -44,7 +57,15 @@ export default function MainPage() {
           [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-gray-600 
           [&::-webkit-scrollbar]:w-2">
           <Tree node={fileTreeNodes[0]}/>
-          <button onClick={() => setItem("Hello", "world")}>call database</button>
+          <button 
+            onClick={() => {
+              const prompt = buildPrompt(fileTreeNodes[0]);
+              callChatGPT(prompt);
+            }}
+            className="inline-flex justify-center align-middle absolute bottom-10 right-4 bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600">
+            <FaMagic className="flex mr-2 justify-center" />
+            Organize
+          </button>
         </div>
       </div>
     </div>

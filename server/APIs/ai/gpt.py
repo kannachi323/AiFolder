@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, request
 from APIs.config import config
 from openai import OpenAI
 
@@ -7,37 +7,20 @@ openai_client = OpenAI(api_key=config["OPENAI_API_KEY"])
 
 MODEL = "gpt-3.5-turbo"
 
-folder_structure = """
-Here is the current folder structure of my project:
-
-/project
-    /docs
-        overview.pdf
-        readme.md
-    /scripts
-        data_cleaning.py
-        analysis.py
-    /images
-        logo.png
-        chart.png
-    /archive
-        old_report.zip
-    notes.txt
-    todo_list.txt
-
-How can I organize these files and folders for better management?
-"""
-
 
 def callChatGPT():
+    prompt = request.data.decode('utf-8')
+
+    if not prompt:
+        return jsonify({"error": "prompt is required"})
+
     response = openai_client.chat.completions.create(
         model=MODEL,
         messages=[
             {"role": "system", "content": "You are an expert at organizing files and folders."},
-            {"role": "user", "content": folder_structure}, 
+            {"role": "user", "content": prompt}, 
         ],
         temperature=0,
-        max_tokens=100
     )
     message_content = response.choices[0].message.content
     print(message_content)

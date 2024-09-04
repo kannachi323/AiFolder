@@ -4,13 +4,13 @@ import { isValidDir } from "../service.js";
 
 
 
-export function SearchBar({folders, setFolders}) {
+export function SearchBar({userFolders, setUserFolders}) {
   const handleSearch = async (folderName, e) => {
     e.preventDefault();
     try {
       const response = await isValidDir(folderName); 
       if (response.result) {
-        setFolders([...folders, folderName]);
+        setUserFolders([...userFolders, folderName]);
       } else {
         console.log('Invalid directory'); // TODO: Implement actual alert
       }
