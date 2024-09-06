@@ -28,7 +28,7 @@ export function SearchBar({userFolders, setUserFolders}) {
   const [inputPath, setInputPath] = useState('');
 
   return (
-    <form className="m-3 mb-0 mx-auto w-full" onSubmit={(e) => handleSearch(document.getElementById('default-search').value, e)}>
+    <form className="m-3" onSubmit={(e) => handleSearch(document.getElementById('default-search').value, e)}>
       <label
         htmlFor="default-search"
         className="sr-only mb-2 text-sm font-medium text-gray-900 dark:text-white"

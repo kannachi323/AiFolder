@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { createBrowserRouter } from "react-router-dom";
 import MainPage from "./routes/MainPage.jsx"
 import Setup from "./routes/Setup.jsx";
+import GmailQuickstart from './routes/GmailPage.jsx';
 
 const AppRouter = createBrowserRouter([
   {
@@ -9,9 +10,14 @@ const AppRouter = createBrowserRouter([
     element: <MainPage />,
   },
   {
-      path: "/setup",
-      element: <Setup />,
+    path: "/setup",
+    element: <Setup />,
   },
+  {
+    path: "/gmail",
+    element: <GmailQuickstart />
+  },
+
 ]);
 
 export default AppRouter;

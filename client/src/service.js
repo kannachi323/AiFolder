@@ -5,22 +5,24 @@ export function buildPrompt(fileTreeJson) {
         return;
     }
 
-    const start_dir = fileTreeJson;
-    let prompt = `${start_dir.id}/\n\t`;
+    let prompt = `${fileTreeJson.id}/\n`;
 
-    // Loop through children and build the prompt string
-    for (let i = 0; i < start_dir.children.length; i++) {
-        const child = start_dir.children[i];
-        // Check if child has no further children
-        if (child.children && child.children.length === 0) {
-            prompt += `${child.id}\n\t`;
-        }
-        else {
-            prompt += '\n';
+    // Function to process only files
+    function processNode(node, depth = 1) {
+        if (node.children && node.children.length > 0) {
+            for (const child of node.children) {
+                if (child.children && child.children.length > 0) {
+                    // This is a folder, skip to process children further
+                    continue;
+                }
+                // This is a file, add to prompt
+                prompt += `${'\t'.repeat(depth)}${child.id}\n`;
+            }
         }
     }
+    processNode(fileTreeJson);
 
-    prompt += `Please organize these files and folders and return just the result in JSON format. The JSON should have the following structure:
+    prompt += `You are an expert file organizer. Please organize these files and folders by categories and return just the result in JSON format. The JSON should have the following structure:
     {
         "folder_name": {
             "subfolder_name": [
@@ -29,30 +31,55 @@ export function buildPrompt(fileTreeJson) {
             ]
         }
     }.`;
-    
+
+    console.log(prompt);
+
     return prompt;
+}
+
+export function createTempFolderAndCopyFiles(originalFolder, structure) {
+    const url = new URL(`http:localhost:5001/api/createTempFolderAndCopyFiles`);
+    const data = {
+        arg1: originalFolder,
+        arg2: structure
+    };
+    const searchParams = new URLSearchParams(data);
+    url.search = searchParams.toString();
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Response from createTempFolderAndCopyFiles:', data.result);
+        })
+        .catch(error => {
+            console.error('Error calling createTempFolderAndCopyFiles:', error);
+        });
+    
+    console.log("done");
 }
 
 
 export function callChatGPT(prompt) {
-    fetch('http://localhost:5001/api/callChatGPT', {
-        method: 'POST', // Use POST to send data
+    return fetch('http://localhost:5001/api/callChatGPT', { // Return the Promise
+        method: 'POST',
         headers: {
-            'Content-Type': 'text/plain', // Specify the content type as plain text
+            'Content-Type': 'text/plain',
         },
-        body: prompt, // Send the prompt directly as a string
+        body: prompt,
     })
     .then(response => {
-        return response.json(); // Parse the response as JSON
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
     })
     .then(data => {
-        return data.result;
+        return data.result; // Return the result field
     })
     .catch(error => {
         console.error('Error calling ChatGPT:', error);
+        throw error; // Re-throw the error to allow handling it in the calling function
     });
-
-    console.log("Request sent");
 }
 
 export function callGoogleCloudVision(file1, file2) {
@@ -154,6 +181,29 @@ export async function isValidDir(path) {
     
     const data = {
         arg1: path
+    };
+
+    const searchParams = new URLSearchParams(data);
+
+    url.search = searchParams.toString();
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        console.log('Response from isValidDir:', data.result);
+        return data;
+    } catch (error) {
+        console.error('Error calling isValidDir:', error);
+        return null;  // or handle the error appropriately
+    }
+}
+
+export async function runCom(output, link) {
+    const url = new URL(`http:localhost:5001/api/runCom`);
+    
+    const data = {
+        arg1: output,
+        arg2: link
     };
 
     const searchParams = new URLSearchParams(data);
