@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Navigate } from 'react-router-dom';
 import { createBrowserRouter } from "react-router-dom";
 import MainPage from "./routes/MainPage.jsx"
 import Setup from "./routes/Setup.jsx";
@@ -17,7 +18,11 @@ const AppRouter = createBrowserRouter([
     path: "/gmail",
     element: <GmailQuickstart />
   },
-
+  {
+    path: "*",
+    element: <Navigate to="/main_window" />
+  }
+  
 ]);
 
 export default AppRouter;

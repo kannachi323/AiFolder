@@ -1,9 +1,17 @@
-import React from "react";
+import React, {useState} from "react";
 import { useNavigate } from 'react-router-dom';
 import { IoMdCheckbox } from "react-icons/io";
 import { MdCheckBoxOutlineBlank } from "react-icons/md";
 import { buildJsonFileTree, callChatGPT } from "../service.js";
 import { getItem, setItem } from "../db.js";
+import { MdAutoDelete } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
+import { FaPencilAlt } from "react-icons/fa";
+import { PiDotsThreeCircleVerticalLight } from "react-icons/pi";
+import { useOutsideClick } from "../hooks/useOutsideClick.jsx";
+
+
+
 export default function FolderSelector({ folderProps }) {
 
   const defaultCheckboxProps = {
@@ -12,35 +20,27 @@ export default function FolderSelector({ folderProps }) {
   };
   
   return (
-    <div className="min-w-[20%] m-5 mb-0 p-2 rounded-md border-solid border-2 flex flex-col items-center overflow-y-scroll overflow-x-hidden
-      border-gray-300 bg-gray-50 text-sm text-gray-900 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white
-      [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 
-      dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 [&::-webkit-scrollbar-track]:rounded-full 
-      [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-gray-600
-      [&::-webkit-scrollbar]:w-2">
-      
+    <>
       <FolderItems folderProps={folderProps} />
       <DefaultCheckBox {...defaultCheckboxProps} />
-    </div>
+    </>
   );
 }
 
 function FolderItems({ folderProps }) {
+  const [hoveredButtonIndex, setHoveredButtonIndex] = useState(null);
+  const [optionsListIndex, setOptionsListIndex] = useState(null);
+  const { isOpen, setIsOpen, dropdownRef } = useOutsideClick(false);
+
   const { userFolders, defaultSelected, defaultFolders, folderActive, setFolderActive, setFileTreeNodes } = folderProps;
 
   const handleFolderClick = async (folderName) => {
-    
     let newNodes = await getItem(folderName);
-    console.log(newNodes);
     if (newNodes) {
-      console.log('hi');
       setFileTreeNodes(newNodes);
-      
-    }
-    else {
+    } else {
       try {
         newNodes = [await buildJsonFileTree(folderName)];
-        
         if (newNodes) {
           setFileTreeNodes(newNodes);
           setItem(folderName, newNodes);
@@ -52,6 +52,13 @@ function FolderItems({ folderProps }) {
     setFolderActive(folderName);
   };
 
+  const handleOptionsClick = (index, folderName, e) => {
+    e.stopPropagation();
+    setOptionsListIndex(index);
+    setFolderActive(folderName);
+    setIsOpen(true);
+  };
+
   return (
     <>
       {(!defaultSelected && userFolders.length === 0) ? (
@@ -60,35 +67,102 @@ function FolderItems({ folderProps }) {
         <>
           {defaultSelected &&
             defaultFolders.map((folderName, index) => (
+              <div
+                key={`default-${index}`}
+                className="relative"
+              >
               <button
-                className={`overflow-hidden m-2 mt-0 flex w-[100px] flex-col items-center rounded-md
-                  p-2 ease-in animate-in slide-in-from-top-full hover:bg-slate-500 text-lg focus:outline-none focus:ring-4 focus:ring-gray-600 ${
+                className={`overflow-hidden px-5 m-2 mt-0 flex w-full flex-row justify-between items-center rounded-md
+                  p-2 ease-in animate-in slide-in-from-top-full hover:bg-slate-500 text-lg ${
                     folderActive === folderName ? "bg-slate-500" : ""
                   }`}
-                key={`default-${index}`}
-                onClick={() => handleFolderClick(folderName)}              
+                onClick={() => handleFolderClick(folderName)}
+                onMouseEnter={() => setHoveredButtonIndex(index)}
+                onMouseLeave={() => setHoveredButtonIndex(null)}
               >
                 {folderName.substring(folderName.lastIndexOf("/") + 1)}
+                {hoveredButtonIndex === index && (
+                  <PiDotsThreeCircleVerticalLight
+                    id="item-options"
+                    className="text-3xl cursor-pointer text-slate-700 hover:text-white"
+                    onClick={(e) => handleOptionsClick(index, folderName, e)}
+                  />
+                )}
               </button>
-            ))
-          }
+              {optionsListIndex === index && isOpen && (
+                <div
+                  ref={dropdownRef}
+                  className="fixed mt-2 left-[20%] w-48 bg-slate-400 rounded-lg shadow-lg z-30 p-1"
+                  
+                >
+                  <button className="flex items-center p-2 hover:bg-slate-600 w-full text-left">
+                    <FaPencilAlt className="text-lg mr-2" />
+                    Rename
+                    
+                  </button>
+                  <button className="flex items-center p-2 hover:bg-slate-600 w-full text-left">
+                    <MdDelete className="text-lg mr-2" />
+                    Delete
+                  </button>
+                  <button className="flex items-center p-2 hover:bg-slate-600 w-full text-left">
+                    <MdAutoDelete className="text-lg mr-2" />
+                    Clear temp folders
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
           {userFolders.map((folderName, index) => (
-            <button
-              className={`overflow-hidden m-2 mt-0 flex w-[100px] flex-col items-center rounded-md
-                p-2 ease-in animate-in slide-in-from-top-full hover:bg-slate-500 text-lg focus:outline-none focus:ring-4 focus:ring-gray-600 ${
+            <div
+              key={`user-${index}`}
+              className="relative" // Add relative positioning to the container
+            >
+              <button
+                className={`overflow-hidden px-5 m-2 mt-0 flex w-full flex-row justify-between items-center rounded-md
+                    p-2 ease-in animate-in slide-in-from-top-full hover:bg-slate-500 text-lg  ${
                   folderActive === folderName ? "bg-slate-500" : ""
                 }`}
-              key={`user-${index}`}
-              onClick={() => handleFolderClick(folderName)}              
-            >
-              {folderName.substring(folderName.lastIndexOf("/") + 1)}
-            </button>
+                onClick={() => handleFolderClick(folderName)}
+                onMouseEnter={() => setHoveredButtonIndex(index + defaultFolders.length)}
+                onMouseLeave={() => setHoveredButtonIndex(null)}
+              >
+                {folderName.substring(folderName.lastIndexOf("/") + 1)}
+                {hoveredButtonIndex === index + defaultFolders.length && (
+                  <PiDotsThreeCircleVerticalLight
+                    id="item-options"
+                    className="text-3xl cursor-pointer"
+                    onClick={(e) => handleOptionsClick(index + defaultFolders.length, folderName, e)}
+                  />
+                )}
+              </button>
+              {optionsListIndex === index + defaultFolders.length && isOpen && (
+                <div
+                  ref={dropdownRef}
+                  className="absolute right-0 w-48 bg-slate-400 rounded-md shadow-lg z-30"
+                  style={{ top: "80%", left: "100%", transform: "translate(-50%, 0)" }}
+                >
+                  <button className="flex items-center p-2 hover:bg-slate-600 w-full text-left">
+                      <FaPencilAlt className="text-lg mr-2" />
+                      Rename
+                  </button>
+                  <button className="flex items-center p-2 hover:bg-slate-600 w-full text-left">
+                    <MdDelete className="text-lg mr-2" />
+                    Delete
+                  </button>
+                  <button className="flex items-center p-2 hover:bg-slate-600 w-full text-left">
+                    <MdAutoDelete className="text-lg mr-2" />
+                    Clear temp folders
+                  </button>
+                </div>
+              )}
+            </div>
           ))}
         </>
       )}
     </>
   );
 }
+
 
 function DefaultCheckBox({ defaultSelected, setDefaultSelected }) {
   return (

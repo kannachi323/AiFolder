@@ -4,6 +4,8 @@ import { runCom } from '../service.js';
 import { MdDataSaverOn } from 'react-icons/md';
 
 export default function GmailQuickstart() {
+  const CLIENT_ID = '163124361067-2i8s4nedstb17jforhv1fnh8p8qojfo4.apps.googleusercontent.com';
+  const API_KEY = 'AIzaSyCpzJ-n6mnKvcBWQ2ZmK398Dx3fhW578gg';
   const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest';
   const SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
 

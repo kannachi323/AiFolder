@@ -9,8 +9,10 @@ export function SearchBar({userFolders, setUserFolders}) {
     e.preventDefault();
     try {
       const response = await isValidDir(folderName); 
+      console.log(response.result);
       if (response.result) {
         setUserFolders([...userFolders, folderName]);
+        
       } else {
         console.log('Invalid directory'); // TODO: Implement actual alert
       }
@@ -28,7 +30,7 @@ export function SearchBar({userFolders, setUserFolders}) {
   const [inputPath, setInputPath] = useState('');
 
   return (
-    <form className="m-3" onSubmit={(e) => handleSearch(document.getElementById('default-search').value, e)}>
+    <form className="m-3 w-full" onSubmit={(e) => handleSearch(document.getElementById('default-search').value, e)}>
       <label
         htmlFor="default-search"
         className="sr-only mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -71,9 +73,8 @@ export function SearchBar({userFolders, setUserFolders}) {
         />
         <button
           type="submit"
-          className="absolute bottom-2.5 end-2.5 rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium 
-          text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 
-          dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="absolute bottom-2.5 end-2.5 rounded-lg bg-slate-600 px-4 py-2 text-sm font-medium 
+          text-white hover:bg-slate-800"
         >
           Add Folder
         </button>
