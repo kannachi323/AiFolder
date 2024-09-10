@@ -46,16 +46,19 @@ export function createTempFolderAndCopyFiles(originalFolder, structure) {
     const searchParams = new URLSearchParams(data);
     url.search = searchParams.toString();
 
-    fetch(url)
+    return fetch(url)
         .then(response => response.json())
         .then(data => {
             console.log('Response from createTempFolderAndCopyFiles:', data.result);
+            return data.result;
+
         })
         .catch(error => {
             console.error('Error calling createTempFolderAndCopyFiles:', error);
+            return error;
         });
     
-    console.log("done");
+    
 }
 
 

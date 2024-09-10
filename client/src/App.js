@@ -1,18 +1,37 @@
 import React, { useState, useMemo } from 'react';
 import { Navigate } from 'react-router-dom';
-import { createBrowserRouter } from "react-router-dom";
+import { createHashRouter } from "react-router-dom";
 import MainPage from "./routes/MainPage.jsx"
-import Setup from "./routes/Setup.jsx";
+import { SetupPage, RegisterPage, LoginPage } from "./routes/SetupPage.jsx";
+import ProfilePage from "./routes/ProfilePage.jsx";
 import GmailQuickstart from './routes/GmailPage.jsx';
 
-const AppRouter = createBrowserRouter([
+const AppRouter = createHashRouter([
   {
     path: "/main_window", //usually '/', but we are using electron-forge
     element: <MainPage />,
   },
   {
-    path: "/setup",
-    element: <Setup />,
+    path: "/user",
+    element: <SetupPage />,
+    children: [
+      {
+        path: "register", // Relative path (do not include "/user/")
+        element: <RegisterPage />,
+      },
+      {
+        path: "login", // Relative path (do not include "/user/")
+        element: <LoginPage />,
+      },
+      {
+        path: "profile",
+        element: <ProfilePage />
+      }
+    ]
+  },
+  {
+    path: "/profile",
+    element: <MainPage />,
   },
   {
     path: "/gmail",
@@ -22,7 +41,6 @@ const AppRouter = createBrowserRouter([
     path: "*",
     element: <Navigate to="/main_window" />
   }
-  
 ]);
 
 export default AppRouter;

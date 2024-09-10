@@ -14,7 +14,7 @@ export function ShelfIcon() {
         <div
           ref={dropdownRef}
           id="dropdown"
-          className="absolute top-[10%] left-2 bg-slate-400 text-white shadow-lg rounded-lg p-4 w-[25vw] m-0 z-20"
+          className="absolute top-[10vh] left-[2vw] bg-slate-400 text-white shadow-lg rounded-lg p-4 w-[25vw] m-0 z-20"
         >
           <button className="flex items-center p-2 hover:bg-slate-600 w-full text-left" onClick={() => setIsOpen(!isOpen)}>
             Duplicate Image Filtering
@@ -36,17 +36,43 @@ export function ShelfIcon() {
   );
 }
 
+export function SettingsIcon() {
+  const { isOpen, setIsOpen, dropdownRef } = useOutsideClick(false);
+  return (
+    <>
+      {isOpen &&
+        <div
+          ref={dropdownRef}
+          id="dropdown"
+          className="absolute top-[10vh] left-[10vw] bg-slate-400 text-white shadow-lg rounded-lg p-4 w-[25vw] m-0 z-20"
+        >
+          <button className="flex items-center p-2 hover:bg-slate-600 w-full text-left" onClick={() => setIsOpen(!isOpen)}>
+            Duplicate Image Filtering
+          </button>
+          <button className="flex items-center p-2 hover:bg-slate-600 w-full text-left" onClick={() => setIsOpen(!isOpen)}>
+            Playground
+          </button>
+          <button className="flex items-center p-2 hover:bg-slate-600 w-full text-left" onClick={() => setIsOpen(!isOpen)}>
+            gmail-yt-dlp
+          </button>
+        </div>
+      }
+      <IoMdSettings className="text-5xl m-4 text-white hover:text-slate-400 cursor-pointer"
+      onClick={() => setIsOpen(!isOpen)}
+      />
+    </>
+  );
+}
+
 export function ProfileIcon() {
+  const verified = false;
+  const path = verified ? '/user/profile' : '/user/login';
+
   const navigate = useNavigate();
     return (
         <CgProfile className="text-5xl m-4 text-white hover:text-slate-400 cursor-pointer"
-          onClick={() => navigate('/main_window')}
+          onClick={() => navigate(`${path}`)}
         />
-    );S
-}
-
-export function SettingsIcon() {
-    return (
-        <IoMdSettings className="text-5xl m-4 text-white hover:text-slate-400 cursor-pointer"/>
     );
 }
+

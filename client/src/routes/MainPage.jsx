@@ -50,6 +50,7 @@ export default function MainPage() {
     fetchUserKeys(); // Call the async function
   }, []);
 
+
   return (
     <>
       {loading ? (
@@ -76,14 +77,16 @@ export default function MainPage() {
               <button
                 className="text-white hover:bg-slate-500 rounded-lg border-2 p-2 m-1 inline-flex justify-between items-center"
                 onClick={async () => {
+                  //TODO: make this part more secure
                   try {
                     setLoading(true);
                     const prompt = buildPrompt(fileTreeNodes[0]);
                     
                     const result = await callChatGPT(prompt);
-                    console.log(result);
+                    
                     
                     await createTempFolderAndCopyFiles(folderActive, result);
+                    
 
                     const newNodes = [await buildJsonFileTree(folderActive)];
                     

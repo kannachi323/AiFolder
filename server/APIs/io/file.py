@@ -24,11 +24,6 @@ def parseStructure(structure):
             print(f"An unexpected error occurred: {e}")
         return None
 
-import os
-import shutil
-import platform
-from flask import request, jsonify
-
 def createTempFolderAndCopyFiles():
     folder_path = request.args.get('arg1')
     
